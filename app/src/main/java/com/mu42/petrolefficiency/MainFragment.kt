@@ -32,8 +32,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadPreferences()
+
         binding.btnCalculate.setOnClickListener { calculateFuelAndDistance() }
         binding.btnSavePreferences.setOnClickListener { savePreferences() }
+
         binding.btnShowHistory.setOnClickListener { showHistoryChart() }
     }
 
