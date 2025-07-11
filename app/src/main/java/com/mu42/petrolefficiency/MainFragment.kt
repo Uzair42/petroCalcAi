@@ -90,8 +90,14 @@ class MainFragment : Fragment() {
 
     private fun showHistoryChart() {
         val chartFragment = ChartFragment.newInstance(fuelHistory)
-        chartFragment.show(parentFragmentManager, "chart")
+        parentFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .add(android.R.id.content, chartFragment)
+            .addToBackStack("ChartFragment")
+            .commit()
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
