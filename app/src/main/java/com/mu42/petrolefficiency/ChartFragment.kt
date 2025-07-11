@@ -14,40 +14,47 @@ import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflec
 import com.google.gson.Gson
 
 
+// ChartFragment.kt
 class ChartFragment : DialogFragment() {
-
     companion object {
         fun newInstance(history: List<Pair<Double, Double>>): ChartFragment {
             val fragment = ChartFragment()
             val bundle = Bundle()
-            val json = Gson().toJson(history)
-            bundle.putString("history", json)
+            val convertedList = history.mapIndexed { index, pair ->
+                ChartEntry(index.toFloat(), pair.second.toFloat())
+            }
+            val json = Gson().toJson(convertedList)
+            bundle.putString("entries", json)
             fragment.arguments = bundle
             return fragment
         }
     }
 
+    data class ChartEntry(val x: Float, val y: Float)
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = requireContext()
         val chart = LineChart(context)
-        val historyJson = arguments?.getString("history") ?: return Dialog(context)
-        val type = object : TypeToken<List<Pair<Double, Double>>>() {}.type
-        val history: List<Pair<Double, Double>> = Gson().fromJson(historyJson, type)
+        val json = arguments?.getString("entries") ?: return Dialog(context)
+        val type = object : TypeToken<List<ChartEntry>>() {}.type
+        val chartEntries: List<ChartEntry> = Gson().fromJson(json, type)
 
-        val entries = history.mapIndexed { index, pair ->
-            DropBoxManager.Entry(index.toFloat().toString(), pair.second.toFloat().toLong())
+        val entries = chartEntries.map { Entry(it.x, it.y) }
+        val dataSet = LineDataSet(entries, "Distance (km)").apply {
+            color = Color.BLUE
+            valueTextColor = Color.BLACK
+            lineWidth = 2f
+            circleRadius = 4f
+            setDrawValues(true)
         }
-        val dataSet = LineDataSet(entries as List<Entry?>?, "Distance (km)")
-        dataSet.color = Color.BLUE
-        dataSet.valueTextColor = Color.BLACK
 
         chart.data = LineData(dataSet)
         chart.description.text = "Fuel History"
         chart.invalidate()
 
-        val builder = AlertDialog.Builder(context)
-        builder.setView(chart)
-        builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-        return builder.create()
+        return AlertDialog.Builder(context)
+            .setView(chart)
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .create()
     }
 }
