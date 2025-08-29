@@ -75,11 +75,17 @@
    │ │ ├── activity_main.xml
 
    │ │ ├── fragment_main.xml
+   
  │ │ └── styles.xml
+ 
 ├── drawable/
+
  │ ├── rounded_edittext.xml
+ 
 ├── values/
+
  │ ├── themes.xml
+ 
 
 
 
@@ -88,18 +94,20 @@
 ## 🔧 How to Build
 
 1. **Clone the repo**
-   ```bash
+   ``` bash
    git clone https://github.com/Uzair42/petroCalcAi.git
    cd petroCalcAi
 
-   ---
 
 
-implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
----
-implementation ("com.google.code.gson:gson:2.10.1")
----
+ ``` Dependencies
 
-*mu42*
+ implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+ implementation ("com.google.code.gson:gson:2.10.1")
+
+```
+
+# MU42 
 
 
